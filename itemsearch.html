@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PoE Currency Rates</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <style>
+        body {
+            background-image: url('7864f697922f727e0108a81b04c2e677189d15d2.jpg');
+            background-repeat: no-repeat;
+            background-image: cover;
+            background-image: center;
+        }
+    </style>
+
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" 
+    integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" 
+    integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+</head>
+
+
+
+<body class="text-light" style="background-color: #000000; text-align: center;  ">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark" style=" text-align: center; ">
+        <div class="container">
+            <a class="navbar-brand"><img src="a53057c8d63091c7f571a13f33147424.webp" width="100" class="img-fluid" >Trend and Item Tracker</a>
+            <div class="navbar-nav">
+                <a class="nav-link" href="index.html">Standard League</a>
+                <a class="nav-link" href="itemsearch.html">Item Search</a>
+                <a class="nav-link" href="aboutme.html">Info</a>
+            </div>
+        </div>
+    </nav>
+    
+
+    <div class="container bg-secondary bg-opacity-50 rounded">
+        <h1 style="color: #fbff00">PoE Multi League</h1>
+        <h3 style="color: #fbff00">Item Search</h3>
+        <hr>
+    </div>
+
+    <div class="container bg-secondary bg-opacity-50 rounded p-2">
+        <p id="message">select a category to load items</p>
+        <div class="row">
+            <div class="col">
+                <p>League:</p>
+                    <select id="leagueselect">
+                        <option value="Standard">Standard</option>
+                        <option value="Hardcore">Hardcore</option>
+                        <option value="Mirage">Mirage</option>
+                        <option value="Hardcore Mirage">Hardcore Mirage</option>
+                    </select>
+            </div>
+            <div class="col">
+                <p>Category:</p>
+                    <select id="categoryselect" onchange="loaditems()">
+                        <option value="">Category</option>
+                        <option value="currency">Currency</option>
+                        <option value="accessory">Accessories</option>
+                        <option value="armour">Armour</option>
+                        <option value="scarab">Scarabs</option>
+                        <option value="card">Divination Cards</option>
+                        <option value="enchantment">Enchantment</option>
+                        <option value="map">Maps</option>
+                        <option value="weapon">Weapons</option>
+                        <option value="bases">Base Types</option>
+                        <option value="uniqueMap">Unique Maps</option>
+                        <option value="flask">Flasks</option>
+                        <option value="jewel">Cluster Jewels</option>
+                        <option value="resonator">Resonators</option>
+                        <option value="fossil">Fossils</option>
+                        <option value="essence">Essences</option>
+                        <option value="incubator">Incubators</option>
+                        <option value="deliriumOrb">Delirium Orbs</option>
+                        <option value="beast">Beasts</option>
+                    </select>
+            </div>
+            <div class="col">
+                <p>Item:</p>
+                    <select id="itemselect" onchange="showitem()">
+                    </select>
+            </div>
+        </div>
+    </div>
+
+    <br>
+    <div class="container" >
+        <table class="table table-dark">
+            <thead>
+                <tr>
+                    <th>Chaos Orb Value</th>
+                    <th>7 Day Average</th>
+                    <th>Max Price</th>
+                    <th>Min Price</th>
+                    <th>Exalted Orb Value</th>
+                    <th>Divine Orb Value</th>
+                    <th>Daily Listings</th>
+                </tr>
+            </thead>
+            <tbody id="itemtable">
+                <tr>
+                    <td>x</td>
+                    <td>x</td>
+                    <td>x</td>
+                    <td>x</td>
+                    <td>x</td>
+                    <td>x</td>
+                    <td>x</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+
+
+    <div class="container">
+        <div class="row">
+            <div class="col-5"></div>
+            <div class="col-2 bg-secondary bg-opacity-50 rounded p-2">
+                <p id="itemnamedisplay"></p>
+                <img id="itemicondisplay" src="" class="img-fluid">
+
+            </div>
+            <div class="col-5"></div>
+    </div>
+    </div>
+    
+
+
+    <script>
+        var league = standard
+        var categorydata = [];
+        
+        function loaditems() {
+            var league = document.getElementById("leagueselect").value
+            var category = document.getElementById("categoryselect").value;
+
+            fetch("https://api.poe.watch/get?league=" + league + "&category=" + category)
+                .then(function(response) {
+                    if (response.ok) {
+                        return response.json();
+                    }
+                })
+                
+                .then(function(data) {
+                    data.sort(function(a,b) {
+                        return a.name.localeCompare(b.name);
+                    })
+                    categorydata = data;
+
+                    var itemselect = document.getElementById("itemselect")
+                    itemselect.innerHTML = "<option value='item'>Items</option>"
+
+                    for (var i = 0; i < categorydata.length; i++) {
+                        itemselect.innerHTML = itemselect.innerHTML + "<option value='" + i  + "'>" + categorydata[i].name + "</option>";
+                    }
+
+                    document.getElementById("message").innerHTML = categorydata.length + " " + league + " items from " + category + " loaded";
+                })
+
+                .catch(function(error){
+                    document.getElementById("message").innerHTML = "failed to load items";
+                })
+        }
+
+        function showitem() {
+
+            var position = document.getElementById("itemselect").value;
+            var item = categorydata[position];
+
+            document.getElementById("itemnamedisplay").innerHTML =  item.name;
+            document.getElementById("itemicondisplay").src = item.icon;
+
+            document.getElementById("itemtable").innerHTML = "<tr>" + "<td>" + item.mean + "</td>" + "<td>" + sevendayaverage(item.history).toFixed(2) + "</td>" + "<td>" + item.max + "</td>" + "<td>" + item.min + "</td>" + "<td>" + item.exalted + "</td>" + "<td>" + item.divine + "</td>" + "<td>" + item.daily + "</td>" + "</tr>";
+
+            
+        }
+
+        function sevendayaverage(history) {
+            var total = 0;
+
+            for (var i = 0; i < history.length; i++) {
+                total = total + history[i];
+            }
+
+            return total / history.length;
+        }   
+
+
+    </script>
+</body>
