@@ -35,7 +35,7 @@
     
 
     <div class="container bg-secondary bg-opacity-50 rounded">
-        <h1 style="color: #fbff00">Standard League</h1>
+        <h1 style="color: #fbff00">POETIT</h1>
         <h3 style="color: #fbff00">Prices and Trending Items</h3>
         <select id="leagueselect" onchange="checkapistatus(); loadtrending(); loadcurrency();">
             <option value="">Select a League</option>
@@ -216,7 +216,7 @@
             for (var i = 0; i < data.length; i++) {
                 var item = data[i];
         
-                var tabledata = "<tr>" + "<td><img src='" + item.icon + "' class='img-fuild' width='30'> " + item.name + "</td>" + "<td>" + item.mean.toFixed(2) + "</td>" + "<td>" + sevendayaverage(item.sevenDaysHistory).toFixed(2) + "</td>" + "<td>" + item.exalted.toFixed(2) + "</td>" + "<td>" + item.divine.toFixed(2) + "</td>" + "</tr>";
+                var tabledata = "<tr>" + "<td><img src='" + item.icon + "' class='img-fuild' width='30'> " + item.name + "</td>" + "<td>" + item.mean + "</td>" + "<td>" + sevendayaverage(item.sevenDaysHistory).toFixed(2) + "</td>" + "<td>" + item.exalted + "</td>" + "<td>" + item.divine + "</td>" + "</tr>";
         
                 table.innerHTML = table.innerHTML + tabledata;
             }
